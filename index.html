@@ -65,7 +65,7 @@
     
     #tree-svg {  
     width: 100%;  
-    height: 650px; /* Assicurati che l'altezza finisca esattamente sopra la riga */
+    height: 500px; /* Assicurati che l'altezza finisca esattamente sopra la riga */
     overflow: hidden; /* Questa è la riga magica che taglia il tronco sotto */
 }
     .branch {  
@@ -139,7 +139,7 @@
 </div>  
     
 <script>  
-const startDate = new Date(2022, 10, 7);  
+const startDate = new Date(2022, 9, 7);  
     
 function drawTree(x, y, angle, length, width, depth, isBase = false) {  
     if (depth === 0) return;  
@@ -174,7 +174,6 @@ function drawTree(x, y, angle, length, width, depth, isBase = false) {
                        L${x + width*0.5},${y - 60}
                        C${x + width*0.7},${y - 30} ${x + bw},${y - 10} ${x + bw},${y} Z`);
 
-base.setAttribute("fill", "var(--trunk-brown)");
 base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
 document.getElementById('branches-container').appendChild(base);
         
@@ -299,4 +298,3 @@ createLeaves();
 </script>  
 </body>  
 </html>
-
