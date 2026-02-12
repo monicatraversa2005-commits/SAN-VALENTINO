@@ -1,0 +1,300 @@
+<!DOCTYPE html>  
+<html lang="it">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Per Te 💙</title>  
+<style>  
+    :root {  
+        --bg-color: #f0f8ff;  
+        --blue-dark: #00458b;  
+        --trunk-brown: #744426;  
+    }  
+    
+    body {  
+        margin: 0;  
+        background: var(--bg-color);  
+        display: flex;  
+        justify-content: center;  
+        align-items: center;  
+        min-height: 100vh;  
+        font-family: 'Segoe UI', sans-serif;  
+    }  
+    
+    #start-screen {  
+        text-align: center;  
+        cursor: pointer;  
+    }  
+    
+    #seed-heart {  
+        font-size: 100px;  
+        animation: pulse 1.5s infinite;  
+        display: inline-block;  
+    }  
+    
+    .valentine-msg {  
+        color: var(--blue-dark);  
+        font-size: 2rem;  
+        font-weight: bold;  
+        margin-top: 15px;  
+    }  
+    
+    @keyframes pulse {  
+        0%, 100% { transform: scale(1); }  
+        50% { transform: scale(1.1); }  
+    }  
+    
+    .card {  
+        display: none;  
+        background: white;  
+        width: 95%;  
+        max-width: 600px;  
+        /* Alzata l'altezza per contenere tutto l'albero + radici + timer */
+        min-height: 650px; 
+        padding: 30px;  
+        border-radius: 30px;  
+        box-shadow: 0 15px 45px rgba(0,0,0,0.1);  
+        flex-direction: column;  
+        align-items: center;  
+        justify-content: space-between;
+        opacity: 0;  
+        transition: opacity 1s;  
+        position: relative;
+        margin: 10px 0;
+    }  
+    
+    #tree-svg {  
+    width: 100%;  
+    height: 650px; /* Assicurati che l'altezza finisca esattamente sopra la riga */
+    overflow: hidden; /* Questa è la riga magica che taglia il tronco sotto */
+}
+    .branch {  
+        fill: none;  
+        stroke: var(--trunk-brown);  
+        stroke-linecap: round;  
+        stroke-dasharray: 1000;  
+        stroke-dashoffset: 1000;  
+        animation: grow-branch 1.5s forwards ease-out;  
+    }  
+    
+    @keyframes grow-branch { to { stroke-dashoffset: 0; } }  
+
+    @keyframes grow-base { 
+        from { opacity: 0; transform: scaleY(0); } 
+        to { opacity: 1; transform: scaleY(1); } 
+    }
+    
+    .heart-leaf {  
+        opacity: 0;  
+        transform: scale(0) rotate(var(--r));  
+        transition: all 1.2s cubic-bezier(0.17, 0.89, 0.32, 1.49);  
+    }  
+    
+    .heart-leaf.pop {  
+        opacity: 0.85;  
+        transform: scale(var(--s)) rotate(var(--r));  
+    }  
+    
+    .timer-container {  
+        text-align: center;  
+        width: 100%;  
+        border-top: 1px solid #f0f0f0;  
+        padding-top: 1px;  
+        margin-top: 1px;
+    }  
+    
+    #timer {  
+        font-size: 1.6rem;  
+        font-weight: bold;  
+        color: var(--blue-dark);  
+        display: block;  
+        margin: 5px 0;  
+    }  
+    
+    .footer-msg {  
+        font-weight: bold;  
+        color: var(--blue-dark);  
+        font-size: 1.3rem;  
+    }  
+</style>  
+</head>  
+<body>  
+    
+<div id="start-screen" onclick="startBloom()">  
+    <div id="seed-heart">💙</div>  
+    <div class="valentine-msg">Buon San Valentino</div>  
+</div>  
+    
+<div class="card" id="main-card">  
+    <svg id="tree-svg" viewBox="0 0 400 420">  
+        <g id="branches-container"></g>  
+        <g id="leaves-container"></g>  
+    </svg>  
+    
+    <div class="timer-container">  
+        <div style="font-size: 0.85rem; color: #0e479e;">Insieme dal 7 Ottobre 2022:</div>  
+        <span id="timer"></span>  
+        <div class="footer-msg">Ti Amo! 💙</div>  
+    </div>  
+</div>  
+    
+<script>  
+const startDate = new Date(2022, 9, 7);  
+    
+function drawTree(x, y, angle, length, width, depth, isBase = false) {  
+    if (depth === 0) return;  
+    
+    const x2 = x + Math.cos(angle) * length;  
+    const y2 = y - Math.sin(angle) * length;  
+    
+    let curveFactor = (depth > 5) ? 0.1 : (Math.random() - 0.5) * 0.25;
+    if (depth % 2 === 0 && depth > 5) curveFactor = -curveFactor;
+
+    const cp1X = x + Math.cos(angle + curveFactor) * (length * 0.4);
+    const cp1Y = y - Math.sin(angle + curveFactor) * (length * 0.4);
+    const cp2X = x + Math.cos(angle - curveFactor) * (length * 0.4);
+    const cp2Y = y - Math.sin(angle - curveFactor) * (length * 0.5);
+    
+ 
+    if (isBase) {
+        // Ombra più morbida
+        const shadow = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        shadow.setAttribute("cx", x);
+        shadow.setAttribute("cy", y + 10);
+        shadow.setAttribute("rx", width * 3);
+        shadow.setAttribute("ry", 10);
+        shadow.setAttribute("fill", "rgba(0,0,0,0.04)");
+        document.getElementById('branches-container').appendChild(shadow);
+
+        // Tronco maestoso
+        const bw = width * 1.8;
+        const base = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        base.setAttribute("d", `M${x - bw},${y+10} 
+                               C${x - bw},${y - 15} ${x - width},${y - 35} ${x - width*0.5},${y - 55}
+                               L${x + width*0.5},${y - 55}
+                               C${x + width},${y - 35} ${x + bw},${y - 15} ${x + bw},${y+10} Z`);
+        base.setAttribute("fill", "var(--trunk-brown)");
+        base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
+        document.getElementById('branches-container').appendChild(base);
+        
+        // Radici intrecciate (che rimangono dentro l'SVG ma sopra il timer)
+        for(let i=0; i<12; i++) {
+            const side = (i % 2 === 0) ? 1 : -1;
+            const rLen = 45 + Math.random() * 55;
+            const rAngle = Math.PI + (side * (0.15 + Math.random() * 0.85));
+            const rx2 = x + Math.cos(rAngle) * rLen;
+            const ry2 = y - Math.sin(rAngle) * (rLen * 0.3) + 10;
+            
+            const root = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            root.setAttribute("d", `M${x + (Math.random()-0.5)*width},${y} 
+                                   C${x + (side*width)},${y+15} 
+                                     ${x + (side*width*2)},${y+10} 
+                                     ${rx2},${ry2}`);
+            root.setAttribute("class", "branch");
+            root.setAttribute("stroke-width", width * (0.2 + Math.random() * 0.25));
+            root.style.animationDelay = `${Math.random() * 0.6}s`;
+            document.getElementById('branches-container').appendChild(root);
+        }
+    }
+    
+
+    const branch = document.createElementNS("http://www.w3.org/2000/svg", "path");  
+    branch.setAttribute("d", `M${x},${y} C${cp1X},${cp1Y} ${cp2X},${cp2Y} ${x2},${y2}`);  
+    branch.setAttribute("class", "branch");  
+    branch.setAttribute("stroke-width", width);  
+    branch.style.animationDelay = `${(8 - depth) * 0.25}s`; 
+    document.getElementById('branches-container').appendChild(branch);  
+ 
+    setTimeout(() => {  
+        if (depth > 6) {  
+            drawTree(x2, y2, angle + (Math.random() - 0.5) * 0.1, length * 0.9, width * 0.85, depth - 1);  
+        }  
+        else if (depth === 6) { 
+            const spreads = [-0.6, 0.1, 0.7];
+            spreads.forEach(s => {
+                drawTree(x2, y2, angle + s, length * 0.75, width * 0.6, depth - 1);
+            });
+        } 
+        else if (depth > 1) {
+            const spreads = [-0.5, 0.5];
+            spreads.forEach(s => {
+                drawTree(x2, y2, angle + s + (Math.random()-0.5)*0.2, length * 0.8, width * 0.7, depth - 1); 
+            });
+        }
+        else { 
+            const spread = 0.6; 
+            drawTree(x2, y2, angle + spread, length * 0.9, width * 0.5, depth - 1); 
+            drawTree(x2, y2, angle - spread, length * 0.9, width * 0.5, depth - 1); 
+        } 
+    }, 150);    
+}  
+    
+function spawnLeafAt(x, y) {  
+    const container = document.getElementById('leaves-container');  
+    const colors = ["#00458b", "#0072ff", "#4a90e2", "#87ceeb", "#b3d9ff", "#ade8f4", "#2196F3"];  
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");  
+    g.setAttribute("transform", `translate(${x},${y})`);  
+    const leaf = document.createElementNS("http://www.w3.org/2000/svg", "path");  
+    leaf.setAttribute("d", "M0,-5 C-2,-10 -8,-10 -8,-5 C-8,0 0,4 0,6 C0,4 8,0 8,-5 C8,-10 2,-10 0,-5 Z");  
+    leaf.setAttribute("fill", colors[Math.floor(Math.random() * colors.length)]);  
+    leaf.setAttribute("class", "heart-leaf");  
+    leaf.style.setProperty('--r', (Math.random() * 360) + 'deg');  
+    leaf.style.setProperty('--s', (Math.random() * 0.35 + 0.15));  
+    leaf.style.transitionDelay = (1.2 + Math.random() * 2.5) + "s";  
+    g.appendChild(leaf);  
+    container.appendChild(g);  
+    if (window.isBlooming) setTimeout(() => leaf.classList.add('pop'), 50);   
+}  
+    
+function createLeaves() {  
+    const cx = 200;  
+    const cy = 220;  
+    const scaleFactor = 11;  
+    const numLeaves = 2600; 
+ 
+    let count = 0;
+    while (count < numLeaves) {
+        const rx = (Math.random() * 34 - 17); 
+        const ry = (Math.random() * 34 - 19); 
+        const nx = rx / 14.5;
+        const ny = -ry / 14.5; 
+        
+        if (Math.pow(nx*nx + ny*ny - 1, 3) - nx*nx * Math.pow(ny, 3) < 0) {
+            const offsetX = (Math.random() - 0.5) * 5;
+            const offsetY = (Math.random() - 0.5) * 5;
+            spawnLeafAt(cx + rx * scaleFactor + offsetX, cy + ry * scaleFactor + offsetY);
+            count++;
+        }
+    }
+}  
+ 
+function startBloom() {  
+    document.getElementById('start-screen').style.display = 'none';  
+    document.getElementById('main-card').style.display = 'flex';  
+    setTimeout(() => {  
+        document.getElementById('main-card').style.opacity = '1';  
+        // Disegna l'albero leggermente più in alto (380 invece di 400) per lasciare fiato alle radici
+        drawTree(200, 500, Math.PI / 2.05, 85, 35, 8, true);  
+         
+        setTimeout(() => {  
+            document.querySelectorAll('.heart-leaf').forEach(l => l.classList.add('pop'));  
+            window.isBlooming = true;   
+        }, 800);  
+    }, 100);  
+    setInterval(updateTimer, 1000);  
+    updateTimer();  
+}  
+    
+function updateTimer() {  
+    const diff = new Date() - startDate;  
+    const d = Math.floor(diff / 86400000);  
+    const h = Math.floor((diff / 3600000) % 24);  
+    const m = Math.floor((diff / 60000) % 60);  
+    const s = Math.floor((diff / 1000) % 60);  
+    document.getElementById('timer').innerText = `${d}g : ${h}h : ${m}m : ${s}s`;  
+}  
+    
+createLeaves();  
+</script>  
+</body>  
+</html>
