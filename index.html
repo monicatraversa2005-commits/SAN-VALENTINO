@@ -139,7 +139,7 @@
 </div>  
     
 <script>  
-const startDate = new Date(2022, 9, 7);  
+const startDate = new Date(2022, 10, 7);  
     
 function drawTree(x, y, angle, length, width, depth, isBase = false) {  
     if (depth === 0) return;  
@@ -182,7 +182,8 @@ document.getElementById('branches-container').appendChild(base);
             const side = (i % 2 === 0) ? 1 : -1;
             const rLen = 45 + Math.random() * 55;
             const rAngle = Math.PI + (side * (0.15 + Math.random() * 0.85));
-     
+            const rx2 = x + Math.cos(rAngle) * rLen;
+            const ry2 = y - Math.sin(rAngle) * (rLen * 0.3) + 10;
             
             const root = document.createElementNS("http://www.w3.org/2000/svg", "path");
             root.setAttribute("d", `M${x + (Math.random()-0.5)*width},${y} 
