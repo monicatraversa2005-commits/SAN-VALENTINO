@@ -153,7 +153,7 @@ function drawTree(x, y, angle, length, width, depth, isBase = false) {
     const cp1X = x + Math.cos(angle + curveFactor) * (length * 0.4);
     const cp1Y = y - Math.sin(angle + curveFactor) * (length * 0.4);
     const cp2X = x + Math.cos(angle - curveFactor) * (length * 0.4);
-    const cp2Y = y - Math.sin(angle - curveFactor) * (length * 0.5);
+    const cp2Y = y - Math.sin(angle - curveFactor) * (length * 0.7);
     
  
     if (isBase) {
@@ -162,20 +162,21 @@ function drawTree(x, y, angle, length, width, depth, isBase = false) {
         shadow.setAttribute("cx", x);
         shadow.setAttribute("cy", y + 10);
         shadow.setAttribute("rx", width * 3);
-        shadow.setAttribute("ry", 10);
+        shadow.setAttribute("ry", 10)
         shadow.setAttribute("fill", "rgba(0,0,0,0.04)");
         document.getElementById('branches-container').appendChild(shadow);
 
         // Tronco maestoso
-        const bw = width * 1.8;
-        const base = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        base.setAttribute("d", `M${x - bw},${y+10} 
-                               C${x - bw},${y - 15} ${x - width},${y - 35} ${x - width*0.5},${y - 55}
-                               L${x + width*0.5},${y - 55}
-                               C${x + width},${y - 35} ${x + bw},${y - 15} ${x + bw},${y+10} Z`);
-        base.setAttribute("fill", "var(--trunk-brown)");
-        base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
-        document.getElementById('branches-container').appendChild(base);
+      const bw = width * 1.2; // Ridotto da 1.8 a 1.2 per non farlo sembrare un trapezio
+      const base = document.createElementNS("http://www.w3.org/2000/svg", "path");
+     base.setAttribute("d", `M${x - bw},${y} 
+                       C${x - bw},${y - 10} ${x - width*0.7},${y - 30} ${x - width*0.5},${y - 60}
+                       L${x + width*0.5},${y - 60}
+                       C${x + width*0.7},${y - 30} ${x + bw},${y - 10} ${x + bw},${y} Z`);
+
+base.setAttribute("fill", "var(--trunk-brown)");
+base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
+document.getElementById('branches-container').appendChild(base);
         
         // Radici intrecciate (che rimangono dentro l'SVG ma sopra il timer)
         for(let i=0; i<12; i++) {
@@ -196,7 +197,7 @@ function drawTree(x, y, angle, length, width, depth, isBase = false) {
             document.getElementById('branches-container').appendChild(root);
         }
     }
-    
+
 
     const branch = document.createElementNS("http://www.w3.org/2000/svg", "path");  
     branch.setAttribute("d", `M${x},${y} C${cp1X},${cp1Y} ${cp2X},${cp2Y} ${x2},${y2}`);  
