@@ -153,7 +153,7 @@ function drawTree(x, y, angle, length, width, depth, isBase = false) {
     const cp1X = x + Math.cos(angle + curveFactor) * (length * 0.4);
     const cp1Y = y - Math.sin(angle + curveFactor) * (length * 0.4);
     const cp2X = x + Math.cos(angle - curveFactor) * (length * 0.4);
-    const cp2Y = y - Math.sin(angle - curveFactor) * (length * 0.7);
+    const cp2Y = y - Math.sin(angle - curveFactor) * (length * 0.8);
     
  
     if (isBase) {
@@ -281,4 +281,5 @@ createLeaves();
 </script>  
 </body>  
 </html>
+
 
