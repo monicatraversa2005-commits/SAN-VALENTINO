@@ -65,7 +65,7 @@
     
     #tree-svg {  
     width: 100%;  
-    height: 500px; /* Assicurati che l'altezza finisca esattamente sopra la riga */
+    height: 650px; /* Assicurati che l'altezza finisca esattamente sopra la riga */
     overflow: hidden; /* Questa è la riga magica che taglia il tronco sotto */
 }
     .branch {  
@@ -153,7 +153,7 @@ function drawTree(x, y, angle, length, width, depth, isBase = false) {
     const cp1X = x + Math.cos(angle + curveFactor) * (length * 0.4);
     const cp1Y = y - Math.sin(angle + curveFactor) * (length * 0.4);
     const cp2X = x + Math.cos(angle - curveFactor) * (length * 0.4);
-    const cp2Y = y - Math.sin(angle - curveFactor) * (length * 0.7);
+    const cp2Y = y - Math.sin(angle - curveFactor) * (length * 0.);
     
  
     if (isBase) {
@@ -174,6 +174,7 @@ function drawTree(x, y, angle, length, width, depth, isBase = false) {
                        L${x + width*0.5},${y - 60}
                        C${x + width*0.7},${y - 30} ${x + bw},${y - 10} ${x + bw},${y} Z`);
 
+base.setAttribute("fill", "var(--trunk-brown)");
 base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
 document.getElementById('branches-container').appendChild(base);
         
