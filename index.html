@@ -166,13 +166,18 @@ function drawTree(x, y, angle, length, width, depth, isBase = false) {
         shadow.setAttribute("fill", "rgba(0,0,0,0.04)");
         document.getElementById('branches-container').appendChild(shadow);
 
-        // Tronco maestoso
-      const bw = width * 1.2; // Ridotto da 1.8 a 1.2 per non farlo sembrare un trapezio
-      const base = document.createElementNS("http://www.w3.org/2000/svg", "path");
-     base.setAttribute("d", `M${x - bw},${y} 
-                       C${x - bw},${y - 10} ${x - width*0.7},${y - 30} ${x - width*0.5},${y - 60}
+// --- Tronco pulito (senza allargamento alla base) ---
+const base = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+// Questa riga crea un rettangolo dritto invece di una forma a trapezio
+base.setAttribute("d", `M${x - width*0.5},${y} 
+                       L${x - width*0.5},${y - 60}
                        L${x + width*0.5},${y - 60}
-                       C${x + width*0.7},${y - 30} ${x + bw},${y - 10} ${x + bw},${y} Z`);
+                       L${x + width*0.5},${y} Z`);
+
+base.setAttribute("fill", "var(--trunk-brown)");
+base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
+document.getElementById('branches-container').appendChild(base);
 
 base.setAttribute("fill", "var(--trunk-brown)");
 base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
@@ -230,7 +235,7 @@ function createLeaves() {
     const cx = 200;  
     const cy = 220;  
     const scaleFactor = 11;  
-    const numLeaves = 2600; 
+    const numLeaves = 2300; 
  
     let count = 0;
     while (count < numLeaves) {
