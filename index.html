@@ -177,28 +177,7 @@ function drawTree(x, y, angle, length, width, depth, isBase = false) {
 base.setAttribute("fill", "var(--trunk-brown)");
 base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
 document.getElementById('branches-container').appendChild(base);
-        
-        // Radici intrecciate (che rimangono dentro l'SVG ma sopra il timer)
-        for(let i=0; i<12; i++) {
-            const side = (i % 2 === 0) ? 1 : -1;
-            const rLen = 45 + Math.random() * 55;
-            const rAngle = Math.PI + (side * (0.15 + Math.random() * 0.85));
-            const rx2 = x + Math.cos(rAngle) * rLen;
-            const ry2 = y - Math.sin(rAngle) * (rLen * 0.3) + 10;
-            
-            const root = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            root.setAttribute("d", `M${x + (Math.random()-0.5)*width},${y} 
-                                   C${x + (side*width)},${y+15} 
-                                     ${x + (side*width*2)},${y+10} 
-                                     ${rx2},${ry2}`);
-            root.setAttribute("class", "branch");
-            root.setAttribute("stroke-width", width * (0.2 + Math.random() * 0.25));
-            root.style.animationDelay = `${Math.random() * 0.6}s`;
-            document.getElementById('branches-container').appendChild(root);
-        }
-    }
-
-
+       
     const branch = document.createElementNS("http://www.w3.org/2000/svg", "path");  
     branch.setAttribute("d", `M${x},${y} C${cp1X},${cp1Y} ${cp2X},${cp2Y} ${x2},${y2}`);  
     branch.setAttribute("class", "branch");  
