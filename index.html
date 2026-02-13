@@ -3,7 +3,7 @@
 <head>  
 <meta charset="UTF-8">  
 <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<title>Per Te 💙</title>  
+<title>Buon San Valentino 💙</title>  
 <style>  
     :root {  
         --bg-color: #f0f8ff;  
@@ -49,7 +49,6 @@
         background: white;  
         width: 95%;  
         max-width: 600px;  
-        /* Alzata l'altezza per contenere tutto l'albero + radici + timer */
         min-height: 650px; 
         padding: 30px;  
         border-radius: 30px;  
@@ -64,10 +63,11 @@
     }  
     
     #tree-svg {  
-    width: 100%;  
-    height: 650px; /* Assicurati che l'altezza finisca esattamente sopra la riga */
-    overflow: hidden; /* Questa è la riga magica che taglia il tronco sotto */
-}
+        width: 100%;  
+        height: 500px; 
+        overflow: hidden; 
+    }
+
     .branch {  
         fill: none;  
         stroke: var(--trunk-brown);  
@@ -99,8 +99,8 @@
         text-align: center;  
         width: 100%;  
         border-top: 1px solid #f0f0f0;  
-        padding-top: 1px;  
-        margin-top: 1px;
+        padding-top: 20px;  
+        margin-top: 10px;
     }  
     
     #timer {  
@@ -139,7 +139,7 @@
 </div>  
     
 <script>  
-const startDate = new Date(2022, 10, 7);  
+const startDate = new Date(2022, 9, 7); // Ottobre è il mese 9 in JS (0-11)
     
 function drawTree(x, y, angle, length, width, depth, isBase = false) {  
     if (depth === 0) return;  
@@ -153,36 +153,20 @@ function drawTree(x, y, angle, length, width, depth, isBase = false) {
     const cp1X = x + Math.cos(angle + curveFactor) * (length * 0.4);
     const cp1Y = y - Math.sin(angle + curveFactor) * (length * 0.4);
     const cp2X = x + Math.cos(angle - curveFactor) * (length * 0.4);
-    const cp2Y = y - Math.sin(angle - curveFactor) * (length * 0.);
+    const cp2Y = y - Math.sin(angle - curveFactor) * (length * 0.4);
     
- 
     if (isBase) {
-        // Ombra più morbida
-        const shadow = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-        shadow.setAttribute("cx", x);
-        shadow.setAttribute("cy", y + 10);
-        shadow.setAttribute("rx", width * 3);
-        shadow.setAttribute("ry", 10)
-        shadow.setAttribute("fill", "rgba(0,0,0,0.04)");
-        document.getElementById('branches-container').appendChild(shadow);
+        // Tronco pulito e dritto (senza radici laterali)
+        const base = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        base.setAttribute("d", `M${x - width*0.5},${y} 
+                               L${x - width*0.5},${y - 60}
+                               L${x + width*0.5},${y - 60}
+                               L${x + width*0.5},${y} Z`);
+        base.setAttribute("fill", "var(--trunk-brown)");
+        base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
+        document.getElementById('branches-container').appendChild(base);
+    }
 
-// --- Tronco pulito (senza allargamento alla base) ---
-const base = document.createElementNS("http://www.w3.org/2000/svg", "path");
-
-// Questa riga crea un rettangolo dritto invece di una forma a trapezio
-base.setAttribute("d", `M${x - width*0.5},${y} 
-                       L${x - width*0.5},${y - 60}
-                       L${x + width*0.5},${y - 60}
-                       L${x + width*0.5},${y} Z`);
-
-base.setAttribute("fill", "var(--trunk-brown)");
-base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
-document.getElementById('branches-container').appendChild(base);
-
-base.setAttribute("fill", "var(--trunk-brown)");
-base.setAttribute("style", "animation: grow-base 1.2s forwards ease-out; opacity: 0; transform-origin: bottom;");
-document.getElementById('branches-container').appendChild(base);
-       
     const branch = document.createElementNS("http://www.w3.org/2000/svg", "path");  
     branch.setAttribute("d", `M${x},${y} C${cp1X},${cp1Y} ${cp2X},${cp2Y} ${x2},${y2}`);  
     branch.setAttribute("class", "branch");  
@@ -228,19 +212,19 @@ function spawnLeafAt(x, y) {
     leaf.style.transitionDelay = (1.2 + Math.random() * 2.5) + "s";  
     g.appendChild(leaf);  
     container.appendChild(g);  
-    if (window.isBlooming) setTimeout(() => leaf.classList.add('pop'), 50);   
+    if (window.isBlooming) setTimeout(() => leaf.classList.add('pop'), 50);  
 }  
     
 function createLeaves() {  
     const cx = 200;  
-    const cy = 220;  
-    const scaleFactor = 11;  
-    const numLeaves = 2300; 
+    const cy = 230; // Più in basso (era 220)
+    const scaleFactor = 10.5; // Leggermente più piccola (era 11)
+    const numLeaves = 2400; 
  
     let count = 0;
     while (count < numLeaves) {
-        const rx = (Math.random() * 34 - 17); 
-        const ry = (Math.random() * 34 - 19); 
+        const rx = (Math.random() * 32 - 16); 
+        const ry = (Math.random() * 32 - 18); 
         const nx = rx / 14.5;
         const ny = -ry / 14.5; 
         
@@ -258,9 +242,9 @@ function startBloom() {
     document.getElementById('main-card').style.display = 'flex';  
     setTimeout(() => {  
         document.getElementById('main-card').style.opacity = '1';  
-        // Disegna l'albero leggermente più in alto (380 invece di 400) per lasciare fiato alle radici
-        drawTree(200, 500, Math.PI / 2.05, 85, 35, 8, true);  
-         
+        // Disegna l'albero (coord Y corretta a 400 per stare sopra il timer)
+        drawTree(200, 400, Math.PI / 2.05, 85, 35, 8, true);  
+          
         setTimeout(() => {  
             document.querySelectorAll('.heart-leaf').forEach(l => l.classList.add('pop'));  
             window.isBlooming = true;   
