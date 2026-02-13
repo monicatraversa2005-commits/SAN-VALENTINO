@@ -245,7 +245,7 @@ function startBloom() {
         document.getElementById('main-card').style.opacity = '1';  
 
         // Disegna l'albero (coord Y corretta a 400 per stare sopra il timer)
-        drawTree(200, 300, Math.PI / 2.05, 85, 35, 8, true);  
+        drawTree(200, 100, Math.PI / 2.05, 85, 35, 8, true);  
           
         setTimeout(() => {  
             document.querySelectorAll('.heart-leaf').forEach(l => l.classList.add('pop'));  
@@ -269,5 +269,6 @@ createLeaves();
 </script>  
 </body>  
 </html>
+
 
 
