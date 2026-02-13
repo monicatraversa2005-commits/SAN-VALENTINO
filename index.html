@@ -219,7 +219,7 @@ function spawnLeafAt(x, y) {
 function createLeaves() {  
     const cx = 200;  
     const cy = 220; // Più in basso (era 220)
-    const scaleFactor = 10.5; // Leggermente più piccola (era 11)
+    const scaleFactor = 11; // Leggermente più piccola (era 11)
     const numLeaves = 2200; 
  
     let count = 0;
@@ -245,7 +245,7 @@ function startBloom() {
         document.getElementById('main-card').style.opacity = '1';  
 
         // Disegna l'albero (coord Y corretta a 400 per stare sopra il timer)
-        drawTree(200, 400, Math.PI / 2.05, 85, 35, 8, true);  
+        drawTree(200, 300, Math.PI / 2.05, 85, 35, 8, true);  
           
         setTimeout(() => {  
             document.querySelectorAll('.heart-leaf').forEach(l => l.classList.add('pop'));  
